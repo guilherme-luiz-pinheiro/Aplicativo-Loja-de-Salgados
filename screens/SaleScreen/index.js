@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 export default function SaleScreen({ route, navigation }) {
     return (
-         <View style={styles.container}>
-                   <Text style={styles.texto}>Você está na Venda</Text>
-                  
-                   <StatusBar style="auto" />
-               </View>
+        <View style={styles.container}>
+            <Text style={styles.texto}>Você está na Venda</Text>
+
+            <StatusBar style="auto" />
+        </View>
     );
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,6 +14,8 @@ import CartScreen from './screens/CartScreen';
 import SaleScreen from './screens/SaleScreen';
 import SalesHistoryScreen from './screens/SalesHistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import LoginScreen from './screens/LoginScreen';
+import { createProdutosTable, createCategoriasTable, createVendasTable, createClientesTable, createVendedoresTable } from './services/database';
 
 // Criando os navegadores
 const Stack = createNativeStackNavigator();
@@ -23,7 +25,7 @@ const Tab = createBottomTabNavigator();
 function BottomTabNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size, focused }) => {
           let iconName;
 
@@ -47,31 +49,33 @@ function BottomTabNavigator() {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen
-        name="Início"
-        component={Home}
-        options={{ headerShown: false }} // Adicionando isso para esconder o cabeçalho
-      />
-      <Tab.Screen name="Produtos" component={ProductScreen} options={{ headerShown: false }} // Adicionando isso para esconder o cabeçalho
-      />
-      <Tab.Screen name="Categorias" component={CategoryScreen} options={{ headerShown: false }} // Adicionando isso para esconder o cabeçalho
-      />
-      <Tab.Screen name="Carrinho" component={CartScreen} options={{ headerShown: false }} // Adicionando isso para esconder o cabeçalho
-      />
-      <Tab.Screen name="Vendas" component={SaleScreen} options={{ headerShown: false }} // Adicionando isso para esconder o cabeçalho
-      />
-      <Tab.Screen name="Perfil" component={ProfileScreen} options={{ headerShown: false }} // Adicionando isso para esconder o cabeçalho
-      />
+      <Tab.Screen name="Início" component={Home} options={{ headerShown: false }} />
+      <Tab.Screen name="Produtos" component={ProductScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Categorias" component={CategoryScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Carrinho" component={CartScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Vendas" component={SaleScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Perfil" component={ProfileScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 }
 
-
 // Configuração do Stack Navigator para telas que não estarão no menu inferior
 export default function App() {
+  useEffect(() => {
+    // Cria as tabelas quando o app inicia
+    (async () => {
+      await createProdutosTable();
+      await createCategoriasTable();
+      await createVendasTable();
+      await createClientesTable();
+      await createVendedoresTable();
+    })();
+  }, []);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="LoginScreen">
+        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} options={{ title: 'Checkout', animation: 'fade' }} />
         <Stack.Screen name="ProductListScreen" component={ProductListScreen} options={{ title: 'Product List' }} />
