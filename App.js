@@ -9,13 +9,13 @@ import Home from './screens/Home';
 import ProductScreen from './screens/ProductScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import ProductListScreen from './screens/ProductListScreen';
-import CheckoutScreen from './screens/CheckoutScreen';
 import CartScreen from './screens/CartScreen';
 import SaleScreen from './screens/SaleScreen';
 import SalesHistoryScreen from './screens/SalesHistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import LoginScreen from './screens/LoginScreen';
 import {
+  dropAllTables,
   createProdutosTable,
   createCategoriasTable,
   createVendasTable,
@@ -63,6 +63,8 @@ function BottomTabNavigator() {
 export default function App() {
   useEffect(() => {
     const initializeDatabase = async () => {
+
+
     };
     initializeDatabase();
   }, []);
@@ -74,7 +76,6 @@ export default function App() {
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} />
-        <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} options={{ title: 'Checkout', animation: 'fade' }} />
         <Stack.Screen name="ProductListScreen" component={ProductListScreen} options={{ title: 'Product List' }} />
         <Stack.Screen name="SalesHistoryScreen" component={SalesHistoryScreen} options={{ title: 'Sales History' }} />
         <Stack.Screen name="ProductScreen" component={ProductScreen} options={{ title: 'Produto', headerBackTitleVisible: false }} />

@@ -20,8 +20,8 @@ export async function obtemTodosProdutos() {
 export async function adicionarProduto(produto) {
     let dbCx = await getDbConnection();
     try {
-        const query = 'INSERT INTO tbProdutos (codigo, produto, descricao, categoria, precoUnitario) VALUES (?,?,?,?,?)';
-        const result = await dbCx.runAsync(query, [produto.codigo, produto.produto, produto.descricao, produto.categoria, produto.precoUnitario]);
+        const query = 'INSERT INTO tbProdutos (produto, descricao, categoria, precoUnitario) VALUES (?,?,?,?)';
+        const result = await dbCx.runAsync(query, [produto.produto, produto.descricao, produto.categoria, produto.precoUnitario]);
         return result.changes === 1;
     } catch (error) {
         console.error(error);

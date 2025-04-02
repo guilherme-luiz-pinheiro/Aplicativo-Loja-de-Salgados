@@ -7,6 +7,11 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 export default function ProfileScreen({ navigation }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    
+    async function carregarProdutos() {
+        const lista = await obtemTodosProdutos();
+        setProdutos(lista);
+    }
 
     const handleUpdateProfile = () => {
         alert(`Perfil atualizado: \nNome: ${name} \nEmail: ${email}`);

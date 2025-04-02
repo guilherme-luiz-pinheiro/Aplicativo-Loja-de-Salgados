@@ -14,7 +14,7 @@ export default function TelaProdutos() {
 
     useEffect(() => {
         carregarCategorias();
-
+        carregarProdutos();
     }, []);
 
     const carregarCategorias = async () => {
@@ -33,7 +33,10 @@ export default function TelaProdutos() {
             console.error("Erro ao carregar categorias:", error);
         }
     };
-
+    const carregarProdutos = async () => {
+        const lista = await obtemTodosProdutos();
+        setProdutos(lista);
+    };
     const getLocalImage = (foto) => {
         const imageMap = {
             "coxinha.png": require("../../assets/coxinha.png"),
@@ -47,27 +50,24 @@ export default function TelaProdutos() {
         return imageMap[imageName] || require("../../assets/coxinha.png"); // Imagem padrão caso não encontre
     };
 
-    async function carregarProdutos() {
-        const lista = await obtemTodosProdutos();
-        setProdutos(lista);
-    }
-
-
-
     async function cadastrarProduto() {
-        if (!produto.produto || !produto.descricao || !produto.categoria || !produto.precoUnitario) {
-            Alert.alert('Erro', 'Preencha todos os campos!');
-            return;
-        }
+
+
+        // Verifica se já existe um produto com o mesmo código
+        const produtosExistentes = await obtemTodosProdutos();
+        const codigoJaExiste = produtosExistentes.some(p => p.codigo === produto.codigo);
+
+
         const sucesso = await adicionarProduto(produto);
         if (sucesso) Alert.alert('Produto adicionado com sucesso!');
         resetarFormulario();
         carregarProdutos();
     }
 
-    async function atualizarProduto() { 
-     
-    
+
+    async function atualizarProduto() {
+
+
         try {
             const resultado = await alterarProduto({
                 codigo: produto.codigo,
@@ -76,7 +76,7 @@ export default function TelaProdutos() {
                 categoria: produto.categoria,
                 precoUnitario: produto.precoUnitario
             });
-    
+
             if (resultado) {
                 Alert.alert("Sucesso", "Produto alterado com sucesso!");
                 resetarFormulario();
@@ -89,11 +89,11 @@ export default function TelaProdutos() {
             Alert.alert("Erro", "Ocorreu um erro ao alterar o produto.");
         }
     }
-    
-    
+
+
     const removerProduto = async () => {
-      
-    
+
+
         try {
             const sucesso = await excluirProduto(produtoSelecionado);
             if (sucesso) {
@@ -109,7 +109,7 @@ export default function TelaProdutos() {
             Alert.alert("Erro", "Ocorreu um erro ao remover o produto.");
         }
     };
-    
+
 
     function resetarFormulario() {
         setProduto({ codigo: '', produto: '', descricao: '', categoria: '', precoUnitario: '' });

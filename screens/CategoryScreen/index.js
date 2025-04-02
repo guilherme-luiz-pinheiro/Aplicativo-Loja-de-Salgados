@@ -50,7 +50,6 @@ const CategoryScreen = () => {
 
     const handleAdicionar = async () => {
         if (nomeCategoria.trim()) {
-            console.error(imagemSelecionada);
 
             const resultado = await adicionarCategoria({ categoria: nomeCategoria, foto: imagemSelecionada });
             if (resultado !== false) {

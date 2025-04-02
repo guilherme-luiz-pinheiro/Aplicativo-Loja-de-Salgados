@@ -1,51 +1,96 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, BackHandler, Alert } from 'react-native';
-import { useState, useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import { 
+    View, 
+    Text, 
+    ActivityIndicator, 
+    StyleSheet, 
+    TouchableOpacity, 
+    Alert 
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
+import { obtemTodosProdutos } from "../../services/produtos";
 
-export default function ProductListScreen({ navigation, route }) {
+const ProductListScreen = () => {
+    const route = useRoute();
+    const { categoryId, categoryName } = route.params || {};
+    const [produtos, setProdutos] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        async function carregarProdutos() {
+            try {
+                const lista = await obtemTodosProdutos();
+                console.log(lista);
+                setProdutos(lista);
+            } catch (error) {
+                console.error("Erro ao carregar produtos:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        carregarProdutos();
+    }, []);
+
+    const adicionarAoCarrinho = async (produto) => {
+        try {
+            console.log("Produto adicionado:", produto); // <-- Adiciona log para depuração
+            
+            const carrinhoAtual = await AsyncStorage.getItem("carrinho");
+            const carrinho = carrinhoAtual ? JSON.parse(carrinhoAtual) : [];
+            
+            carrinho.push(produto);
+            await AsyncStorage.setItem("carrinho", JSON.stringify(carrinho));
+            Alert.alert("Sucesso", "Produto adicionado ao carrinho!");
+        } catch (error) {
+            console.error("Erro ao adicionar ao carrinho:", error);
+        }
+    };
+    
 
     return (
         <View style={styles.container}>
-            <Text style={styles.texto}>Você está na Lista de produtos</Text>
-
-            <StatusBar style="auto" />
+            <Text style={styles.categoryTitle}>{categoryName}</Text>
+            {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+                produtos.map((item) => (
+                    <TouchableOpacity 
+                        key={item.codigo} 
+                        style={styles.productItem} 
+                        onPress={() => adicionarAoCarrinho(item)}
+                    >
+                        <Text>{item.produto} - R${item.precoUnitario}</Text>
+                    </TouchableOpacity>
+                ))
+            )}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        padding: 20,
+        backgroundColor: "#f5f5f5",
     },
-    texto: {
-        fontSize: 30,
-    },
-    textoPequeno: {
+    categoryTitle: {
         fontSize: 24,
+        fontWeight: "bold",
+        marginBottom: 10,
+        textAlign: "center",
+        color: "#333",
     },
-    botao: {
-        width: "90%",
-        height: 70,
-        borderColor: '#000',
-        borderWidth: 2,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
+    productItem: {
+        fontSize: 18,
+        padding: 15,
+        backgroundColor: "#fff",
+        marginVertical: 5,
+        borderRadius: 8,
+        elevation: 2,
+        textAlign: "center",
+        alignItems: "center",
     },
-    caixaTexto: {
-        width: "80%",
-        height: 50,
-        borderColor: '#0AF',
-        borderWidth: 2,
-        borderRadius: 20,
-        marginBottom: 30,
-        paddingHorizontal: 10,
-        fontSize: 24,
-
-    }
 });
+
+export default ProductListScreen;

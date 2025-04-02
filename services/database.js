@@ -31,7 +31,7 @@ export async function dropAllTables() {
 // Tabelas
 export async function createProdutosTable() {
     const query = `CREATE TABLE IF NOT EXISTS tbProdutos (
-        codigo TEXT NOT NULL PRIMARY KEY,
+        codigo INTEGER PRIMARY KEY AUTOINCREMENT,
         produto TEXT NOT NULL,
         descricao TEXT NOT NULL,
         categoria TEXT NOT NULL,
@@ -55,7 +55,7 @@ export async function createCategoriasTable() {
 
 export async function createVendasTable() {
     const query = `CREATE TABLE IF NOT EXISTS tbVendas (
-        codigo TEXT NOT NULL PRIMARY KEY,
+        codigo INTEGER PRIMARY KEY AUTOINCREMENT,
         quantidade TEXT NOT NULL,
         produto TEXT NOT NULL
     )`;
@@ -66,7 +66,7 @@ export async function createVendasTable() {
 
 export async function createClientesTable() {
     const query = `CREATE TABLE IF NOT EXISTS tbClientes (
-        codigo TEXT NOT NULL PRIMARY KEY,
+        codigo INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL
@@ -78,7 +78,7 @@ export async function createClientesTable() {
 
 export async function createVendedoresTable() {
     const query = `CREATE TABLE IF NOT EXISTS tbVendedores (
-        codigo TEXT NOT NULL PRIMARY KEY,
+        codigo INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL,
