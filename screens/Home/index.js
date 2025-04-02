@@ -1,22 +1,61 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { obtemTodasCategorias } from '../../services/categorias';
 
-export default function Home({ navigation, route }) {
-    const categories = [
-        { id: 1, name: 'Frito', image: require('../../assets/coxinha.png') },
-        { id: 2, name: 'Congelado', image: require('../../assets/coxinha_congelada.png') },
-        { id: 3, name: 'Assado', image: require('../../assets/coxinha.png') },
-        { id: 4, name: 'Cru', image: require('../../assets/coxinha.png') },
-    ];
+export default function Home({ navigation }) {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        carregarCategorias();
+    }, []);
+
+    const carregarCategorias = async () => {
+        try {
+            const categoriasObtidas = await obtemTodasCategorias();
+            console.log("Categorias carregadas:", categoriasObtidas);
+    
+            if (Array.isArray(categoriasObtidas) && categoriasObtidas.length > 0) {
+                setCategories(categoriasObtidas.map(item => ({
+                    id: item.codigo,
+                    name: item.categoria,
+                    image: getLocalImage(item.foto) // Função para carregar imagem corretamente
+                })));
+            }
+        } catch (error) {
+            console.error("Erro ao carregar categorias:", error);
+        }
+    };
+    
+    // 🔍 Ajuste na função `getLocalImage()`
+    const getLocalImage = (foto) => {
+        const imageMap = {
+            "coxinha.png": require("../../assets/coxinha.png"),
+            "empada.png": require("../../assets/empada.png"),
+            "esfiha.png": require("../../assets/esfiha.png"),
+        };
+        
+        return imageMap[foto] || require("../../assets/coxinha.png"); // Imagem padrão caso não encontre
+    };
+    
+    
+    
 
     return (
         <View style={styles.container}>
             <Text style={styles.texto}>Você está na Home</Text>
 
-            {/* Scroll horizontal para categorias */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoriesContainer}>
+            <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false} 
+                contentContainerStyle={styles.categoriesContainer}
+            >
                 {categories.map((category) => (
-                    <TouchableOpacity key={category.id} style={styles.categoryItem} onPress={() => alert(`Selecionado: ${category.name}`)}>
+                    <TouchableOpacity 
+                        key={category.id} 
+                        style={styles.categoryItem} 
+                        onPress={() => navigation.navigate('ProductScreen', { categoryName: category.name })}
+                    >
                         <View style={styles.categoryItemTop}>
                             <Image source={category.image} style={styles.categoryImage} />
                         </View>
@@ -32,7 +71,7 @@ export default function Home({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 30,
+        marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 30,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
@@ -41,29 +80,42 @@ const styles = StyleSheet.create({
     texto: {
         fontSize: 30,
         marginBottom: 20,
+        fontFamily: 'Roboto',
     },
     categoriesContainer: {
-        flexDirection: 'row', // Garante que fique em linha
-        alignItems: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingHorizontal: 10,
     },
     categoryItem: {
-        width: 90,
+        width: 120,
         alignItems: 'center',
-        marginHorizontal: 10, // Espaço entre os itens
+        marginHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: '#f8f8f8',
+        padding: 10,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
     },
     categoryItemTop: {
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
         alignItems: 'center',
-        width: 90,
-        backgroundColor: '#ffcc50',
+        width: 100,
+        backgroundColor: '#fff',
+        padding: 10,
+        overflow: 'hidden',
     },
     categoryImage: {
+        width: '60%',
+        height: 80,
         resizeMode: 'cover',
-        marginBottom: 10,
     },
     categoryName: {
-        fontSize: 14,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 5,
+        color: '#333',
     },
 });

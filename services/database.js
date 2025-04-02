@@ -5,6 +5,29 @@ export async function getDbConnection() {
     return await SQLite.openDatabaseAsync('dbDonnelloSalgados.db');
 }
 
+export async function dropAllTables() {
+    const queries = [
+        'DROP TABLE IF EXISTS tbProdutos',
+        'DROP TABLE IF EXISTS tbCategorias',
+        'DROP TABLE IF EXISTS tbVendas',
+        'DROP TABLE IF EXISTS tbClientes',
+        'DROP TABLE IF EXISTS tbVendedores',
+    ];
+
+    let cx = await getDbConnection();
+
+    try {
+        for (let query of queries) {
+            await cx.execAsync(query);
+        }
+        console.log('Tabelas deletadas com sucesso');
+    } catch (error) {
+        console.error('Erro ao deletar tabelas:', error);
+    } finally {
+        await cx.closeAsync();
+    }
+}
+
 // Tabelas
 export async function createProdutosTable() {
     const query = `CREATE TABLE IF NOT EXISTS tbProdutos (
@@ -21,8 +44,9 @@ export async function createProdutosTable() {
 
 export async function createCategoriasTable() {
     const query = `CREATE TABLE IF NOT EXISTS tbCategorias (
-        codigo TEXT NOT NULL PRIMARY KEY,
-        categoria TEXT NOT NULL
+        codigo INTEGER PRIMARY KEY AUTOINCREMENT,
+        categoria TEXT NOT NULL,
+        foto TEXT
     )`;
     let cx = await getDbConnection();
     await cx.execAsync(query);

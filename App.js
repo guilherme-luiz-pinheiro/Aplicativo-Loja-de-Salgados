@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { Ionicons } from 'react-native-vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Importação das telas
 import Home from './screens/Home';
@@ -15,7 +15,13 @@ import SaleScreen from './screens/SaleScreen';
 import SalesHistoryScreen from './screens/SalesHistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import LoginScreen from './screens/LoginScreen';
-import { createProdutosTable, createCategoriasTable, createVendasTable, createClientesTable, createVendedoresTable } from './services/database';
+import { 
+  createProdutosTable, 
+  createCategoriasTable, 
+  createVendasTable, 
+  createClientesTable, 
+  createVendedoresTable, 
+} from './services/database';
 
 // Criando os navegadores
 const Stack = createNativeStackNavigator();
@@ -31,10 +37,6 @@ function BottomTabNavigator() {
 
           if (route.name === 'Início') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Produtos') {
-            iconName = focused ? 'cart' : 'cart-outline';
-          } else if (route.name === 'Categorias') {
-            iconName = focused ? 'list' : 'list-outline';
           } else if (route.name === 'Carrinho') {
             iconName = focused ? 'cart' : 'cart-outline';
           } else if (route.name === 'Vendas') {
@@ -50,8 +52,6 @@ function BottomTabNavigator() {
       })}
     >
       <Tab.Screen name="Início" component={Home} options={{ headerShown: false }} />
-      <Tab.Screen name="Produtos" component={ProductScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Categorias" component={CategoryScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Carrinho" component={CartScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Vendas" component={SaleScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Perfil" component={ProfileScreen} options={{ headerShown: false }} />
@@ -62,24 +62,41 @@ function BottomTabNavigator() {
 // Configuração do Stack Navigator para telas que não estarão no menu inferior
 export default function App() {
   useEffect(() => {
-    // Cria as tabelas quando o app inicia
     (async () => {
-      await createProdutosTable();
-      await createCategoriasTable();
-      await createVendasTable();
-      await createClientesTable();
-      await createVendedoresTable();
+        try {
+            console.log("Criando tabelas...");
+            await createProdutosTable();
+            console.log("Criando tabelas...");
+
+            await createCategoriasTable();
+            console.log("Criando tabelas...");
+
+            await createVendasTable();
+            console.log("Criando tabelas...");
+
+            await createClientesTable();
+            console.log("Criando tabelas...");
+
+            await createVendedoresTable();
+            console.log("Tabelas criadas com sucesso!");
+        } catch (error) {
+            console.error("Erro ao inicializar o banco de dados:", error);
+        }
     })();
-  }, []);
+}, []);
+
+
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} options={{ title: 'Checkout', animation: 'fade' }} />
         <Stack.Screen name="ProductListScreen" component={ProductListScreen} options={{ title: 'Product List' }} />
         <Stack.Screen name="SalesHistoryScreen" component={SalesHistoryScreen} options={{ title: 'Sales History' }} />
+        <Stack.Screen name="ProductScreen" component={ProductScreen} options={{ title: 'Produto', headerBackTitleVisible: false }} />
+        <Stack.Screen name="CategoryScreen" component={CategoryScreen} options={{ title: 'Categoria', headerBackTitleVisible: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
