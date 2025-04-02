@@ -19,7 +19,7 @@ export default function Home({ navigation }) {
                 setCategories(categoriasObtidas.map(item => ({
                     id: item.codigo,
                     name: item.categoria,
-                    image: getLocalImage(item.foto) // Função para carregar imagem corretamente
+                    image: getLocalImage(item.foto)
                 })));
             }
         } catch (error) {
@@ -27,7 +27,6 @@ export default function Home({ navigation }) {
         }
     };
     
-    // 🔍 Ajuste na função `getLocalImage()`
     const getLocalImage = (foto) => {
         const imageMap = {
             "coxinha.png": require("../../assets/coxinha.png"),
@@ -35,14 +34,11 @@ export default function Home({ navigation }) {
             "esfiha.png": require("../../assets/esfiha.png"),
         };
     
-        // Extrai apenas o nome do arquivo da string (remove o caminho "../../assets/")
         const imageName = foto.split("/").pop(); 
     
-        return imageMap[imageName] || require("../../assets/coxinha.png"); // Imagem padrão caso não encontre
+        return imageMap[imageName] || require("../../assets/coxinha.png");
     };
     
-    
-
     return (
         <View style={styles.container}>
             <Text style={styles.texto}>Você está na Home</Text>
@@ -56,7 +52,7 @@ export default function Home({ navigation }) {
                     <TouchableOpacity 
                         key={category.id} 
                         style={styles.categoryItem} 
-                        onPress={() => navigation.navigate('ProductListScreen', { categoryName: category.name })}
+                        onPress={() => navigation.navigate('ProductListScreen', { categoryId: category.id, categoryName: category.name })}
                     >
                         <View style={styles.categoryItemTop}>
                             <Image source={category.image} style={styles.categoryImage} />

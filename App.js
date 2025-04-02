@@ -15,12 +15,12 @@ import SaleScreen from './screens/SaleScreen';
 import SalesHistoryScreen from './screens/SalesHistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import LoginScreen from './screens/LoginScreen';
-import { 
-  createProdutosTable, 
-  createCategoriasTable, 
-  createVendasTable, 
-  createClientesTable, 
-  createVendedoresTable, 
+import {
+  createProdutosTable,
+  createCategoriasTable,
+  createVendasTable,
+  createClientesTable,
+  createVendedoresTable,
 } from './services/database';
 
 // Criando os navegadores
@@ -61,7 +61,11 @@ function BottomTabNavigator() {
 
 // Configuração do Stack Navigator para telas que não estarão no menu inferior
 export default function App() {
- 
+  useEffect(() => {
+    const initializeDatabase = async () => {
+    };
+    initializeDatabase();
+  }, []);
 
 
 

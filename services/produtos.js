@@ -1,22 +1,22 @@
 // services/produtos.js
 import { getDbConnection } from './database';
 
+
 export async function obtemTodosProdutos() {
-    let dbCx = await getDbConnection();
+    let dbCx;
     try {
-        const registros = await dbCx.getAllAsync(
-            'SELECT codigo, produto, descricao, precoUnitario FROM tbProdutos'
-        );
-        return registros;
+        dbCx = await getDbConnection();
+        if (!dbCx) throw new Error("Falha ao obter conexão com o banco de dados.");
+
+        const categorias = await dbCx.getAllAsync('SELECT * FROM tbProdutos');
+        
+        // Retorna os dados e mantém a conexão aberta para futuras operações
+        return categorias;
     } catch (error) {
-        console.error(error);
+        console.error("Erro ao obter Produtos:", error);
         return [];
-    } finally {
-        await dbCx.closeAsync();
     }
 }
-
-
 export async function adicionarProduto(produto) {
     let dbCx = await getDbConnection();
     try {

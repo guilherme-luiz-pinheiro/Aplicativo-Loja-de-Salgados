@@ -14,7 +14,7 @@ export default function TelaProdutos() {
 
     useEffect(() => {
         carregarCategorias();
-        carregarProdutos();
+
     }, []);
 
     const carregarCategorias = async () => {
