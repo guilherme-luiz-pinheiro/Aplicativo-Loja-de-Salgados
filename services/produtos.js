@@ -5,7 +5,7 @@ export async function obtemTodosProdutos() {
     let dbCx = await getDbConnection();
     try {
         const registros = await dbCx.getAllAsync(
-            'SELECT tbProdutos.codigo, tbProdutos.produto, tbProdutos.descricao, tbProdutos.precoUnitario, tbCategorias.categoria FROM tbProdutos INNER JOIN tbCategorias ON tbProdutos.categoria = tbCategorias.codigo'
+            'SELECT codigo, produto, descricao, precoUnitario FROM tbProdutos'
         );
         return registros;
     } catch (error) {
@@ -15,6 +15,7 @@ export async function obtemTodosProdutos() {
         await dbCx.closeAsync();
     }
 }
+
 
 export async function adicionarProduto(produto) {
     let dbCx = await getDbConnection();
@@ -30,19 +31,20 @@ export async function adicionarProduto(produto) {
     }
 }
 
-export async function alterarProduto(produto) {
+export async function alterarProduto({ codigo, produto, descricao, categoria, precoUnitario }) {
     let dbCx = await getDbConnection();
     try {
         const query = 'UPDATE tbProdutos SET produto=?, descricao=?, categoria=?, precoUnitario=? WHERE codigo=?';
-        const result = await dbCx.runAsync(query, [produto.produto, produto.descricao, produto.categoria, produto.precoUnitario, produto.codigo]);
-        return result.changes === 1;
+        const result = await dbCx.runAsync(query, [produto, descricao, categoria, precoUnitario, codigo]);
+        return result.changes === 1; // Verifica se a atualização foi bem-sucedida
     } catch (error) {
-        console.error(error);
+        console.error('Erro ao atualizar produto:', error);
         return false;
     } finally {
         await dbCx.closeAsync();
     }
 }
+
 
 export async function excluirProduto(codigo) {
     let dbCx = await getDbConnection();
@@ -57,3 +59,4 @@ export async function excluirProduto(codigo) {
         await dbCx.closeAsync();
     }
 }
+

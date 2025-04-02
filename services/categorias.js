@@ -26,20 +26,17 @@ export async function obtemTodasCategorias() {
         dbCx = await getDbConnection();
         if (!dbCx) throw new Error("Falha ao obter conexão com o banco de dados.");
 
-        return await dbCx.getAllAsync('SELECT * FROM tbCategorias');
+        const categorias = await dbCx.getAllAsync('SELECT * FROM tbCategorias');
+        
+        // Retorna os dados e mantém a conexão aberta para futuras operações
+        return categorias;
     } catch (error) {
         console.error("Erro ao obter categorias:", error);
         return [];
-    } finally {
-        if (dbCx) {
-            try {
-                await dbCx.closeAsync();
-            } catch (closeError) {
-                console.error("Erro ao fechar a conexão com o banco:", closeError);
-            }
-        }
     }
 }
+
+
 
 
 export async function adicionarCategoria({ categoria, foto }) {

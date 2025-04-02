@@ -34,10 +34,12 @@ export default function Home({ navigation }) {
             "empada.png": require("../../assets/empada.png"),
             "esfiha.png": require("../../assets/esfiha.png"),
         };
-        
-        return imageMap[foto] || require("../../assets/coxinha.png"); // Imagem padrão caso não encontre
-    };
     
+        // Extrai apenas o nome do arquivo da string (remove o caminho "../../assets/")
+        const imageName = foto.split("/").pop(); 
+    
+        return imageMap[imageName] || require("../../assets/coxinha.png"); // Imagem padrão caso não encontre
+    };
     
     
 
@@ -54,7 +56,7 @@ export default function Home({ navigation }) {
                     <TouchableOpacity 
                         key={category.id} 
                         style={styles.categoryItem} 
-                        onPress={() => navigation.navigate('ProductScreen', { categoryName: category.name })}
+                        onPress={() => navigation.navigate('ProductListScreen', { categoryName: category.name })}
                     >
                         <View style={styles.categoryItemTop}>
                             <Image source={category.image} style={styles.categoryImage} />
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     categoryImage: {
-        width: '60%',
+        width: '75%',
         height: 80,
         resizeMode: 'cover',
     },

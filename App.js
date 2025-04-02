@@ -61,29 +61,7 @@ function BottomTabNavigator() {
 
 // Configuração do Stack Navigator para telas que não estarão no menu inferior
 export default function App() {
-  useEffect(() => {
-    (async () => {
-        try {
-            console.log("Criando tabelas...");
-            await createProdutosTable();
-            console.log("Criando tabelas...");
-
-            await createCategoriasTable();
-            console.log("Criando tabelas...");
-
-            await createVendasTable();
-            console.log("Criando tabelas...");
-
-            await createClientesTable();
-            console.log("Criando tabelas...");
-
-            await createVendedoresTable();
-            console.log("Tabelas criadas com sucesso!");
-        } catch (error) {
-            console.error("Erro ao inicializar o banco de dados:", error);
-        }
-    })();
-}, []);
+ 
 
 
 

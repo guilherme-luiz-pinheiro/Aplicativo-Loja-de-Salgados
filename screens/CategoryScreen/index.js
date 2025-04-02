@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import { obtemTodasCategorias, adicionarCategoria, alterarCategoria, excluirCategoria } from '../../services/categorias';
 import { Picker } from '@react-native-picker/picker';
 
@@ -118,7 +118,7 @@ const CategoryScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
             <Text style={styles.title}>Gerenciar Categorias</Text>
 
             <View style={styles.section}>
@@ -204,11 +204,11 @@ const CategoryScreen = () => {
                         <Picker.Item key={categoria.id} label={categoria.nome} value={categoria.id} />
                     ))}
                 </Picker>
-                <TouchableOpacity style={styles.button} onPress={handleExcluir}>
+                <TouchableOpacity style={[styles.button, styles.buttonDelete]} onPress={handleExcluir}>
                     <Text style={styles.buttonText}>Excluir</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -264,6 +264,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
     },
+    scrollContent: { padding: 20 },
+    buttonDelete: { backgroundColor: '#dc3545' },
+
 });
 
 export default CategoryScreen;
