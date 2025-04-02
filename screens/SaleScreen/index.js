@@ -32,7 +32,16 @@ export default function SaleScreen({ route, navigation }) {
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.itemContainer}>
-                            <Text style={styles.itemText}>{item.nome} - R$ {item.preco.toFixed(2)}</Text>
+                            <Text style={styles.itemText}>Data: {new Date(item.data).toLocaleDateString()}</Text>
+                            <FlatList
+                                data={item.itens}
+                                keyExtractor={(subItem, subIndex) => subIndex.toString()}
+                                renderItem={({ item: subItem }) => (
+                                    <Text style={styles.itemText}>
+                                        {subItem.nome} - R$ {subItem.preco ? subItem.preco.toFixed(2) : '0.00'}
+                                    </Text>
+                                )}
+                            />
                         </View>
                     )}
                 />
