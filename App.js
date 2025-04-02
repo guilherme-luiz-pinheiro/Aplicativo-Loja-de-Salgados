@@ -73,7 +73,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="LoginScreen">
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="ProductListScreen" component={ProductListScreen} options={{ title: 'Product List' }} />
